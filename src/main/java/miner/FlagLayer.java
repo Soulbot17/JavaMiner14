@@ -69,8 +69,12 @@ class FlagLayer
             flagMap.set(coordinate, Box.NOBOMB);
     }
 
-    void setOpenedToClosedBoxesAroundNumber(Coordinates coordinates)
+    int getCountOfFlagedBoxesAround(Coordinates coordinates)
     {
-
+        int count = 0;
+        for (Coordinates around : Ranges.getCoordsAround(coordinates))
+            if (flagMap.get(around) == Box.FLAGED)
+                count++;
+        return count;
     }
 }

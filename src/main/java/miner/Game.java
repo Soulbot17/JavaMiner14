@@ -54,7 +54,8 @@ public class Game
         return true;
     }
 
-    private void checkWinner() {
+    private void checkWinner()
+    {
         if (state == GameState.PLAYED)
             if (flag.getCountOfClosedBoxes() == bomb.getTotalBombs())
                 state = GameState.WINNER;
@@ -65,25 +66,42 @@ public class Game
         switch (flag.get(coordinates))
         {
             case OPENED:
-                flag.setOpenedToClosedBoxesAroundNumber(coordinates); return;
+                setOpenedToClosedBoxesAroundNumber(coordinates);
+                return;
             case FLAGED:
                 return;
             case CLOSED:
                 switch (bomb.get(coordinates))
                 {
-                    case ZERO: openBoxesAround(coordinates); return;
-                    case BOMB: openBombs(coordinates); return;
-                    default: flag.setOpenedToBox(coordinates);
+                    case ZERO:
+                        openBoxesAround(coordinates);
+                        return;
+                    case BOMB:
+                        openBombs(coordinates);
+                        return;
+                    default:
+                        flag.setOpenedToBox(coordinates);
                 }
         }
+    }
+
+    void setOpenedToClosedBoxesAroundNumber(Coordinates coordinates)
+    {
+        if (bomb.get(coordinates) != Box.BOMB)
+            if (flag.getCountOfFlagedBoxesAround(coordinates) == bomb.get(coordinates).getNumber())
+                for (Coordinates around : Ranges.getCoordsAround(coordinates))
+                    if (flag.get(around) == Box.CLOSED)
+                        openBox(around);
     }
 
     private void openBombs(Coordinates bombed)
     {
         state = GameState.BOMBED;
         flag.setBombedToBox(bombed);
-        for (Coordinates coordinate : Ranges.getAllCoordinates()) {
-            if (bomb.get(coordinate) == Box.BOMB ) {
+        for (Coordinates coordinate : Ranges.getAllCoordinates())
+        {
+            if (bomb.get(coordinate) == Box.BOMB)
+            {
                 flag.setOpenedToClosedBox(coordinate);
             } else flag.setNoBombToFlaggedSafeBox(coordinate);
         }
@@ -92,8 +110,8 @@ public class Game
     private void openBoxesAround(Coordinates coordinates)
     {
         flag.setOpenedToBox(coordinates);
-        for (Coordinates aroud : Ranges.getCoordsAround(coordinates))
-            openBox(aroud);
+        for (Coordinates around : Ranges.getCoordsAround(coordinates))
+            openBox(around);
     }
 
 
